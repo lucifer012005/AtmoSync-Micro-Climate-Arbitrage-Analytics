@@ -1,0 +1,4 @@
+kafka-python
+snowflake-connector-pyhton
+pandas
+python-dotenv

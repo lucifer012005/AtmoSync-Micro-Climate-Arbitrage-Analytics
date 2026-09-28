@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: raw
+    database: ATMOSYNC_DB
+    schema: RAW
+    tables:
+      - name: RAW_IOT_DATA
+      - name: COMMODITY_PRICES
+      - name: ROUTE_DISTANCES

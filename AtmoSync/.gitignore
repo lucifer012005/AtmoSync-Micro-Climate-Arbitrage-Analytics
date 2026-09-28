@@ -1,0 +1,9 @@
+venv/
+node_modules/
+kafka_2.13-4.3.1/
+kafka-4.3.1-src/
+__pycache__/
+*.pyc
+.env
+*.log
+.DS_Store
