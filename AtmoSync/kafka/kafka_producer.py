@@ -7,22 +7,10 @@ from kafka import KafkaProducer
 
 KAFKA_SERVER = "localhost:9092"
 TOPIC = "iot_telemetry"
+DLQ_TOPIC = "iot_telemetry_dlq"
 
-CONTAINERS = [
-    "CONT-A001",
-    "CONT-A002",
-    "CONT-A003",
-    "CONT-A004",
-    "CONT-A005"
-]
-
-COMMODITIES = [
-    "Avocado",
-    "Mango",
-    "Banana",
-    "Tomato"
-]
-
+CONTAINERS = ["CONT-A001", "CONT-A002", "CONT-A003", "CONT-A004", "CONT-A005"]
+COMMODITIES = ["Avocado", "Mango", "Banana", "Tomato"]
 ROUTES = [
     ("Mumbai", "Pune"),
     ("Nashik", "Mumbai"),
@@ -36,6 +24,14 @@ producer = KafkaProducer(
     value_serializer=lambda value: json.dumps(value).encode("utf-8")
 )
 
+def validate_telemetry(payload):
+    """Validates required keys and physical threshold ranges."""
+    required_keys = {"container_id", "commodity", "origin", "destination", "temperature_c", "humidity_pct", "vibration_g", "timestamp"}
+    if not required_keys.issubset(payload.keys()):
+        raise ValueError(f"Missing mandatory fields: {required_keys - payload.keys()}")
+    if not (-20 <= payload["temperature_c"] <= 50):
+        raise ValueError(f"Temperature value out of bounds: {payload['temperature_c']}")
+    return True
 
 def generate_event():
     origin, destination = random.choice(ROUTES)
@@ -61,16 +57,18 @@ def generate_event():
         "timestamp": datetime.now(timezone.utc).isoformat()
     }
 
-
-print("AtmoSync Kafka Producer Started")
+print("AtmoSync Kafka Producer Started with Validation & DLQ Support")
 
 while True:
     event = generate_event()
+    try:
+        validate_telemetry(event)
+        producer.send(TOPIC, event)
+        print("Sent:", event)
+    except Exception as err:
+        dlq_payload = {"corrupted_event": event, "error": str(err)}
+        producer.send(DLQ_TOPIC, dlq_payload)
+        print("Routed to DLQ:", dlq_payload)
 
-    producer.send(TOPIC, event)
     producer.flush()
-
-    print("Sent:", event)
-
     time.sleep(2)
-    
