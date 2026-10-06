@@ -1,0 +1,21 @@
+version: 2
+
+models:
+  - name: fct_spoilage_risk
+    columns:
+      - name: container_id
+        tests:
+          - not_null
+      - name: telemetry_at
+        tests:
+          - not_null
+      - name: container_health_status
+        tests:
+          - accepted_values:
+              values: ['OPTIMAL', 'MEDIUM_RISK', 'HIGH_RISK']
+
+  - name: fct_spoilage_arbitrage
+    columns:
+      - name: container_id
+        tests:
+          - not_null
