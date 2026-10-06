@@ -1,3 +1,6 @@
+# AtmoSync: Kafka to Snowflake consumer
+# Consumes IoT sensor data from Kafka and loads it into Snowflake.
+
 import json
 import os
 
