@@ -1,0 +1,9 @@
+version: 2
+
+sources:
+  - name: raw_data
+    database: ATMOSYNC_DB
+    schema: RAW
+    tables:
+      - name: RAW_IOT_DATA
+        description: "Raw IoT container telemetry stream loaded from Apache Kafka"
