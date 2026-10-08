@@ -1,0 +1,39 @@
+version: 2
+
+models:
+  - name: stg_iot_telemetry
+    description: "Cleaned IoT telemetry data used for AtmoSync analytics."
+
+    columns:
+      - name: CONTAINER_ID
+        description: "Unique identifier of the shipping container."
+        data_tests:
+          - not_null
+
+      - name: COMMODITY
+        description: "Commodity being transported."
+        data_tests:
+          - not_null
+
+      - name: TEMPERATURE_C
+        description: "Container temperature in Celsius."
+        data_tests:
+          - not_null
+
+      - name: HUMIDITY_PCT
+        description: "Container humidity percentage."
+        data_tests:
+          - not_null
+
+      - name: EVENT_TIMESTAMP
+        description: "Timestamp when the IoT event occurred."
+        data_tests:
+          - not_null
+
+      - name: ENVIRONMENTAL_RISK
+        description: "Environmental risk classification calculated from temperature and humidity."
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['LOW', 'MEDIUM', 'HIGH']

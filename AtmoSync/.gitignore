@@ -9,3 +9,9 @@ __pycache__/
 .DS_Store
 profiles.yml
 .dbt/
+logs/
+dbt/atmo_sync/logs/
+dbt/atmo_sync/target/
+dbt/atmo_sync/dbt_packages/
+*.backup_*
+*.bak
